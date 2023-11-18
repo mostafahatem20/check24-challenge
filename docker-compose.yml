@@ -1,18 +1,18 @@
 version: "0.0"
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      FRONTEND_PORT: ${FRONTEND_PORT}
-      BACKEND_PORT: ${BACKEND_PORT}
-      DB_HOSTNAME: ${DB_HOSTNAME}
-      DB_DATABASE_NAME: ${DB_DATABASE_NAME}
-    ports:
-      - 3000:${FRONTEND_PORT}
-      - 8000:${BACKEND_PORT}
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     FRONTEND_PORT: ${FRONTEND_PORT}
+  #     BACKEND_PORT: ${BACKEND_PORT}
+  #     DB_HOSTNAME: ${DB_HOSTNAME}
+  #     DB_DATABASE_NAME: ${DB_DATABASE_NAME}
+  #   ports:
+  #     - 3000:${FRONTEND_PORT}
+  #     - 8000:${BACKEND_PORT}
 
   postgres:
     image: postgres:14.9
