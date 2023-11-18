@@ -29,22 +29,22 @@ export class Craftsman {
   @Column({ nullable: false })
   house_number: string;
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ nullable: true })
   lon: number;
 
-  @Column({ type: 'double', nullable: true })
+  @Column({ nullable: true })
   lat: number;
 
-  @Column({ type: 'int64' })
+  @Column()
   max_driving_distance: number;
 
   @OneToOne(() => QualityFactorScore, (score) => score.craftsman)
   @JoinColumn()
   score: QualityFactorScore;
 
-  @CreateDateColumn({ type: 'datetime', nullable: true })
-  created_at: Date;
+  @CreateDateColumn({ type: 'timestamptz', nullable: true })
+  created_at?: Date;
 
-  @UpdateDateColumn({ type: 'datetime', nullable: true })
-  updated_at: Date;
+  @UpdateDateColumn({ type: 'timestamptz', nullable: true })
+  updated_at?: Date;
 }

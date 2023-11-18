@@ -21,9 +21,9 @@ export class PostalCode {
   @Column({ type: 'enum', enum: PostcodeExtensionGroup })
   postcode_extension_distance_group: string;
 
-  @CreateDateColumn({ type: 'datetime', nullable: true })
-  created_at: Date;
+  @CreateDateColumn({ type: 'timestamptz', nullable: true })
+  created_at?: Date;
 
-  @UpdateDateColumn({ type: 'datetime', nullable: true })
-  updated_at: Date;
+  @UpdateDateColumn({ type: 'timestamptz', nullable: true })
+  updated_at?: Date;
 }

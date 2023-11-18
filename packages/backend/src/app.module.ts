@@ -18,9 +18,10 @@ import { QualityFactorScore } from './quality-factor-scores/entities/quality-fac
     DataModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
-      port: parseInt(process.env.DB_PORT) || 5432,
-      host: process.env.DB_HOSTNAME || 'localhost',
-      database: process.env.DB_DATABASE_NAME || 'check24',
+      port: 5432,
+      host: 'localhost',
+      username: 'postgres',
+      database: 'check24',
       entities: [Craftsman, PostalCode, QualityFactorScore],
       synchronize: true,
     }),
