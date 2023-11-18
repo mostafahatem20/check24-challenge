@@ -1,11 +1,10 @@
 {
-  "name": "root",
+  "name": "@not-so-software/monorepo",
   "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {},
   "devDependencies": {
     "lerna": "^7.4.2"
   },
