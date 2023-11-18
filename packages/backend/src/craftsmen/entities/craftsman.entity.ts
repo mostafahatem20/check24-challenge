@@ -1,50 +1,44 @@
 import { QualityFactorScore } from 'src/quality-factor-scores/entities/quality-factor-score.entity';
 import {
-  Entity,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
+    Entity,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+    PrimaryGeneratedColumn,
+    OneToOne,
+    JoinColumn,
 } from 'typeorm';
 
 @Entity()
 export class Craftsman {
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({ nullable: false })
-  first_name: string;
+    @Column()
+    first_name: string;
 
-  @Column({ nullable: false })
-  last_name: string;
+    @Column()
+    last_name: string;
 
-  @Column({ nullable: false })
-  city: string;
+    @Column()
+    city: string;
 
-  @Column({ nullable: false })
-  street: string;
+    @Column()
+    street: string;
 
-  @Column({ nullable: false })
-  house_number: string;
+    @Column()
+    house_number: string;
 
-  @Column({ nullable: true })
-  lon: number;
+    @Column({ type: 'double precision' })
+    lon: number;
 
-  @Column({ nullable: true })
-  lat: number;
+    @Column({ type: 'double precision' })
+    lat: number;
 
-  @Column()
-  max_driving_distance: number;
+    @Column()
+    max_driving_distance: number;
 
-  @OneToOne(() => QualityFactorScore, (score) => score.craftsman)
-  @JoinColumn()
-  score: QualityFactorScore;
-
-  @CreateDateColumn({ type: 'timestamptz', nullable: true })
-  created_at?: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz', nullable: true })
-  updated_at?: Date;
+    @OneToOne(() => QualityFactorScore, (score) => score.craftsman)
+    @JoinColumn()
+    score: QualityFactorScore;
 }

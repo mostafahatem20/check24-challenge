@@ -21,7 +21,7 @@ import { QualityFactorScore } from './quality-factor-scores/entities/quality-fac
       port: 5432,
       host: 'localhost',
       username: 'postgres',
-      database: 'check24',
+      database: 'postgres',
       entities: [Craftsman, PostalCode, QualityFactorScore],
       synchronize: true,
     }),
