@@ -7,6 +7,6 @@ import { QualityFactorScore } from './entities/quality-factor-score.entity';
 export class QualityFactorScoreService {
   constructor(
     @InjectRepository(QualityFactorScore)
-    private usersRepository: Repository<QualityFactorScore>,
+    private repository: Repository<QualityFactorScore>,
   ) {}
 }
