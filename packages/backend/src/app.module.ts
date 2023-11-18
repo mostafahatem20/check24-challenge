@@ -9,24 +9,30 @@ import { Craftsman } from './craftsmen/entities/craftsman.entity';
 import { PostalCode } from './postal-codes/entities/postal-code.entity';
 import { QualityFactorScore } from './quality-factor-scores/entities/quality-factor-score.entity';
 import { CraftsmenPostalsModule } from './craftsmen-postals/craftsmen-postals.module';
+import { CraftsmenPostal } from './craftsmen-postals/entities/craftsmen-postal.entity';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot(),
-    CraftsmenModule,
-    PostalCodesModule,
-    QualityFactorScoreModule,
-    DataModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      port: 5432,
-      host: 'localhost',
-      username: 'postgres',
-      database: 'postgres',
-      entities: [Craftsman, PostalCode, QualityFactorScore],
-      synchronize: true,
-    }),
-    CraftsmenPostalsModule,
-  ],
+    imports: [
+        ConfigModule.forRoot(),
+        CraftsmenModule,
+        PostalCodesModule,
+        QualityFactorScoreModule,
+        DataModule,
+        TypeOrmModule.forRoot({
+            type: 'postgres',
+            port: 5432,
+            host: 'localhost',
+            username: 'postgres',
+            database: 'postgres',
+            entities: [
+                Craftsman,
+                PostalCode,
+                QualityFactorScore,
+                CraftsmenPostal,
+            ],
+            synchronize: true,
+        }),
+        CraftsmenPostalsModule,
+    ],
 })
 export class AppModule {}
