@@ -1,8 +1,5 @@
 .LayoutBody {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 5px;
+  padding: 10px 10px;
 }
 
 .Logo {
