@@ -8,6 +8,6 @@ import { PostalCode } from './entities/postal-code.entity';
   imports: [TypeOrmModule.forFeature([PostalCode])],
   controllers: [PostalCodesController],
   providers: [PostalCodesService],
-  exports: [PostalCodesService],
+  exports: [PostalCodesService, TypeOrmModule],
 })
 export class PostalCodesModule {}
