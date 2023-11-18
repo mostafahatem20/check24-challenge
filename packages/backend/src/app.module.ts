@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Craftsman } from './craftsmen/entities/craftsman.entity';
 import { PostalCode } from './postal-codes/entities/postal-code.entity';
 import { QualityFactorScore } from './quality-factor-scores/entities/quality-factor-score.entity';
+import { CraftsmenPostalsModule } from './craftsmen-postals/craftsmen-postals.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { QualityFactorScore } from './quality-factor-scores/entities/quality-fac
       entities: [Craftsman, PostalCode, QualityFactorScore],
       synchronize: true,
     }),
+    CraftsmenPostalsModule,
   ],
 })
 export class AppModule {}
