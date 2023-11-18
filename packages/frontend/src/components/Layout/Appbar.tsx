@@ -11,10 +11,12 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
+import en from "../../utils/en.json";
+import routes from "../../utils/routes.json";
 
 const pages = [
-  { value: "/", label: "Home" },
-  { value: "/admin", label: "Admin" },
+  { value: routes.home, label: en.home },
+  { value: routes.admin, label: en.admin },
 ];
 
 const ResponsiveAppBar = () => {

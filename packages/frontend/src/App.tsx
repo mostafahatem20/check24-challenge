@@ -4,14 +4,16 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./utils/theme";
+import routes from "./utils/routes.json";
+
 const router = createBrowserRouter([
   {
     id: "root",
-    path: "/",
+    path: routes.home,
     Component: Home,
   },
   {
-    path: "/admin",
+    path: routes.admin,
     Component: Admin,
   },
 ]);
