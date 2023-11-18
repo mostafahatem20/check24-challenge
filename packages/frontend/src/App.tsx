@@ -1,7 +1,20 @@
 import React from "react";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Home from "./pages/Home";
+import Admin from "./pages/Admin";
 
-const App = () => {
-  return <div>App</div>;
-};
+const router = createBrowserRouter([
+  {
+    id: "root",
+    path: "/",
+    Component: Home,
+  },
+  {
+    path: "/admin",
+    Component: Admin,
+  },
+]);
 
-export default App;
+export default function App() {
+  return <RouterProvider router={router} />;
+}
