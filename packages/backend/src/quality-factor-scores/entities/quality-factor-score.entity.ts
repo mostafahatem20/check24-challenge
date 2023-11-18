@@ -6,10 +6,10 @@ export class QualityFactorScore {
   @PrimaryColumn()
   profile_id: number;
 
-  @Column({ type: "double precision"})
+  @Column({ type: 'double precision' })
   profile_picture_score: number;
 
-  @Column({ type: "double precision"})
+  @Column({ type: 'double precision' })
   profile_description_score: number;
 
   @OneToOne(() => Craftsman, (craftsman) => craftsman.score)
