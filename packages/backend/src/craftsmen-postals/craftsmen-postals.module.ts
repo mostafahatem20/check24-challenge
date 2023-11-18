@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CraftsmenPostalsService } from './craftsmen-postals.service';
-import { CraftsmenPostal } from './entities/craftsmen-postal.entity';
+import { CraftsmanPostal } from './entities/craftsman-postal.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([CraftsmenPostal])],
-    providers: [CraftsmenPostalsService],
-    exports: [CraftsmenPostalsService, TypeOrmModule],
+  imports: [TypeOrmModule.forFeature([CraftsmanPostal])],
+  providers: [CraftsmenPostalsService],
+  exports: [CraftsmenPostalsService, TypeOrmModule],
 })
 export class CraftsmenPostalsModule {}

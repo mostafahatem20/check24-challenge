@@ -1,10 +1,11 @@
+import { CraftsmanPostal } from 'src/craftsmen-postals/entities/craftsman-postal.entity';
 import { QualityFactorScore } from 'src/quality-factor-scores/entities/quality-factor-score.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   OneToOne,
-  JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -37,6 +38,11 @@ export class Craftsman {
   max_driving_distance: number;
 
   @OneToOne(() => QualityFactorScore, (score) => score.craftsman)
-  @JoinColumn()
   score: QualityFactorScore;
+
+  @OneToMany(
+    () => CraftsmanPostal,
+    (CraftsmanPostal) => CraftsmanPostal.craftsman,
+  )
+  postals: CraftsmanPostal[];
 }

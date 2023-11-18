@@ -7,13 +7,13 @@ import { QualityFactorScoreModule } from 'src/quality-factor-scores/quality-fact
 import { CraftsmenPostalsModule } from 'src/craftsmen-postals/craftsmen-postals.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Craftsman]),
-        QualityFactorScoreModule,
-        CraftsmenPostalsModule,
-    ],
-    controllers: [CraftsmenController],
-    providers: [CraftsmenService],
-    exports: [CraftsmenService, TypeOrmModule],
+  imports: [
+    TypeOrmModule.forFeature([Craftsman]),
+    QualityFactorScoreModule,
+    CraftsmenPostalsModule,
+  ],
+  controllers: [CraftsmenController],
+  providers: [CraftsmenService],
+  exports: [CraftsmenService, TypeOrmModule],
 })
 export class CraftsmenModule {}
