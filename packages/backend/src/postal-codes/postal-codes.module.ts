@@ -5,8 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostalCode } from './entities/postal-code.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([PostalCode])],
-    controllers: [PostalCodesController],
-    providers: [PostalCodesService],
+  imports: [TypeOrmModule.forFeature([PostalCode])],
+  controllers: [PostalCodesController],
+  providers: [PostalCodesService],
+  exports: [PostalCodesService],
 })
 export class PostalCodesModule {}
