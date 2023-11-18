@@ -8,7 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "rootDir": ".",
-    "outDir": "../../dist",
+    "outDir": "./dist",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true
