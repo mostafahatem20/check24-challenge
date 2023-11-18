@@ -1,4 +1,15 @@
 {
   "home": "Home",
-  "admin": "Admin"
+  "admin": "Admin",
+  "card": {
+    "rating": "Rating",
+    "chat": "Chat",
+    "distance": "Distance",
+    "book": "Book"
+  },
+  "postalCode": "Postal Code",
+  "tabs": {
+    "shortestDistance": "Shortest Distance",
+    "highestRating": "Highest Rating"
+  }
 }

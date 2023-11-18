@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import AspectRatio from "@mui/joy/AspectRatio";
 import Box from "@mui/joy/Box";
 import Button from "@mui/joy/Button";
@@ -6,8 +6,13 @@ import MUICard from "@mui/joy/Card";
 import CardContent from "@mui/joy/CardContent";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
+import en from "../../utils/en.json";
+import { Craftsman } from "@not-so-software/shared";
 
-const Card = () => {
+const Card: React.FC<Craftsman> = ({ name, rankingScore, distance }) => {
+  const [randomNum] = useState(Math.floor(Math.random() * 100));
+  const randomUserImageUrl = `https://randomuser.me/api/portraits/men/${randomNum}.jpg`;
+
   return (
     <Box
       sx={{
@@ -16,37 +21,6 @@ const Card = () => {
         overflow: { xs: "auto", sm: "initial" },
       }}
     >
-      <Box
-        sx={{
-          position: "absolute",
-          display: "block",
-          width: "1px",
-          bgcolor: "warning.300",
-          left: "500px",
-          top: "-24px",
-          bottom: "-24px",
-          "&::before": {
-            top: "4px",
-            content: '"vertical"',
-            display: "block",
-            position: "absolute",
-            right: "0.5rem",
-            color: "text.tertiary",
-            fontSize: "sm",
-            fontWeight: "lg",
-          },
-          "&::after": {
-            top: "4px",
-            content: '"horizontal"',
-            display: "block",
-            position: "absolute",
-            left: "0.5rem",
-            color: "text.tertiary",
-            fontSize: "sm",
-            fontWeight: "lg",
-          },
-        }}
-      />
       <MUICard
         orientation="horizontal"
         sx={{
@@ -63,19 +37,11 @@ const Card = () => {
         }}
       >
         <AspectRatio flex ratio="1" maxHeight={182} sx={{ minWidth: 182 }}>
-          <img
-            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286"
-            srcSet="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=286&dpr=2 2x"
-            loading="lazy"
-            alt=""
-          />
+          <img src={randomUserImageUrl} loading="lazy" alt="" />
         </AspectRatio>
         <CardContent>
           <Typography fontSize="xl" fontWeight="lg">
-            Alex Morrison
-          </Typography>
-          <Typography level="body-sm" fontWeight="lg" textColor="text.tertiary">
-            Senior Journalist
+            {name}
           </Typography>
           <Sheet
             sx={{
@@ -90,29 +56,24 @@ const Card = () => {
           >
             <div>
               <Typography level="body-xs" fontWeight="lg">
-                Articles
+                {en.card.distance}
               </Typography>
-              <Typography fontWeight="lg">34</Typography>
+              <Typography fontWeight="lg">{`${distance} KM`}</Typography>
             </div>
+
             <div>
               <Typography level="body-xs" fontWeight="lg">
-                Followers
+                {en.card.rating}
               </Typography>
-              <Typography fontWeight="lg">980</Typography>
-            </div>
-            <div>
-              <Typography level="body-xs" fontWeight="lg">
-                Rating
-              </Typography>
-              <Typography fontWeight="lg">8.9</Typography>
+              <Typography fontWeight="lg">{rankingScore}</Typography>
             </div>
           </Sheet>
           <Box sx={{ display: "flex", gap: 1.5, "& > button": { flex: 1 } }}>
             <Button variant="outlined" color="neutral">
-              Chat
+              {en.card.chat}
             </Button>
             <Button variant="solid" color="primary">
-              Follow
+              {en.card.book}
             </Button>
           </Box>
         </CardContent>

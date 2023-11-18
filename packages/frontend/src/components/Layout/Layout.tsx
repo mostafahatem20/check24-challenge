@@ -8,7 +8,7 @@ interface ILayout {
 
 const Layout: React.FC<ILayout> = ({ children }) => {
   return (
-    <div>
+    <div style={{ backgroundColor: "#F8F8F8" }}>
       <header>
         <ResponsiveAppBar />
       </header>

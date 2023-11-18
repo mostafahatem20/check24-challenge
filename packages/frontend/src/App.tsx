@@ -2,9 +2,17 @@ import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
-import { ThemeProvider } from "@mui/material/styles";
-import theme from "./utils/theme";
+// import theme from "./utils/theme";
 import routes from "./utils/routes.json";
+import {
+  experimental_extendTheme as materialExtendTheme,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  THEME_ID as MATERIAL_THEME_ID,
+} from "@mui/material/styles";
+import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+
+const materialTheme = materialExtendTheme();
 
 const router = createBrowserRouter([
   {
@@ -20,8 +28,11 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+      <JoyCssVarsProvider>
+        <CssBaseline enableColorScheme />
+        <RouterProvider router={router} />
+      </JoyCssVarsProvider>
+    </MaterialCssVarsProvider>
   );
 }
