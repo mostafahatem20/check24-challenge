@@ -2,7 +2,8 @@ import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
-
+import { ThemeProvider } from "@mui/material/styles";
+import theme from "./utils/theme";
 const router = createBrowserRouter([
   {
     id: "root",
@@ -16,5 +17,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }

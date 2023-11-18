@@ -1,8 +1,8 @@
 import React from "react";
-import Button from "@mui/material/Button";
+import Layout from "../components/Layout/Layout";
 
 const Home = () => {
-  return <Button variant="contained">Hello world</Button>;
+  return <Layout>ahmad</Layout>;
 };
 
 export default Home;
