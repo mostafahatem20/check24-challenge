@@ -74,9 +74,11 @@ const Craftsmen: React.FC<ICraftsmen> = ({ sort, sortBy, postalCode }) => {
         );
       }}
       components={
-        craftsmenState.craftsmen.length > 0 ||
-        craftsmenState.status === "loading"
-          ? { Footer }
+        postalCode
+          ? craftsmenState.craftsmen.length > 0 ||
+            craftsmenState.status === "loading"
+            ? { Footer }
+            : { Footer: NoRecords }
           : { Footer: NoRecords }
       }
     />
