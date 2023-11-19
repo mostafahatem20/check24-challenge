@@ -2,7 +2,7 @@ import React from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
-// import theme from "./utils/theme";
+import theme from "./utils/theme";
 import routes from "./utils/routes.json";
 import {
   experimental_extendTheme as materialExtendTheme,
@@ -12,7 +12,7 @@ import {
 import { CssVarsProvider as JoyCssVarsProvider } from "@mui/joy/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 
-const materialTheme = materialExtendTheme();
+const materialTheme = materialExtendTheme(theme);
 
 const router = createBrowserRouter([
   {

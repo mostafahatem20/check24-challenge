@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 // Replace these colors with the Check24 color scheme
 const check24Colors = {
   primary: "#063773",
-  //   secondary: '#FF4081',
+  secondary: "#000000",
 };
 
 const theme = createTheme({
@@ -11,9 +11,9 @@ const theme = createTheme({
     primary: {
       main: check24Colors.primary,
     },
-    // secondary: {
-    //   main: check24Colors.secondary,
-    // },
+    secondary: {
+      main: check24Colors.secondary,
+    },
     // You can define other colors such as text, background, etc.
     // For example:
     // text: {

@@ -68,7 +68,7 @@ const Craftsmen: React.FC<ICraftsmen> = ({ sort, sortBy, postalCode }) => {
       data={craftsmenState.craftsmen}
       itemContent={(index, craftsman) => {
         return (
-          <div>
+          <div style={{ margin: "10px 10px" }}>
             <Card {...craftsman} />
           </div>
         );

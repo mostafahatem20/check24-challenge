@@ -60,7 +60,8 @@ export class CraftsmenService {
       return craftsmen;
     }
     return await this.craftsmanRepository
-      .createQueryBuilder()
+      .createQueryBuilder('spp')
+      .leftJoinAndSelect('spp.score', 'score')
       .offset(offset)
       .limit(parseInt(limit))
       .getRawMany();

@@ -32,15 +32,16 @@ const Home = () => {
               setPostalCode(e.target.value);
             }}
             onClick={() => {
-              dispatch(
-                getCraftsmenByPostalCode({
-                  page: "1",
-                  limit,
-                  postalCode,
-                  sort,
-                  sortBy,
-                })
-              );
+              if (postalCode)
+                dispatch(
+                  getCraftsmenByPostalCode({
+                    page: "1",
+                    limit,
+                    postalCode,
+                    sort,
+                    sortBy,
+                  })
+                );
             }}
             value={postalCode}
           />
@@ -53,10 +54,26 @@ const Home = () => {
                 setIndex(0);
                 setSort("ASC");
                 setSortBy("Distance");
+                dispatch(
+                  getCraftsmenByPostalCode({
+                    page: "1",
+                    limit,
+                    postalCode,
+                    sort: "ASC",
+                    sortBy: "Distance",
+                  })
+                );
               } else {
                 setIndex(-1);
                 setSort(undefined);
                 setSortBy(undefined);
+                dispatch(
+                  getCraftsmenByPostalCode({
+                    page: "1",
+                    limit,
+                    postalCode,
+                  })
+                );
               }
             }}
           >
@@ -69,10 +86,26 @@ const Home = () => {
                 setIndex(1);
                 setSort("DESC");
                 setSortBy("Profile_Score");
+                dispatch(
+                  getCraftsmenByPostalCode({
+                    page: "1",
+                    limit,
+                    postalCode,
+                    sort: "DESC",
+                    sortBy: "Profile_Score",
+                  })
+                );
               } else {
                 setIndex(-1);
                 setSort(undefined);
                 setSortBy(undefined);
+                dispatch(
+                  getCraftsmenByPostalCode({
+                    page: "1",
+                    limit,
+                    postalCode,
+                  })
+                );
               }
             }}
           >
