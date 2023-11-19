@@ -19,7 +19,7 @@ import { QualityFactorScore } from './quality-factor-scores/entities/quality-fac
     TypeOrmModule.forRoot({
       type: 'postgres',
       port: 5432,
-      host: 'localhost',
+      host: 'postgres',
       username: 'postgres',
       database: 'check24',
       entities: [Craftsman, PostalCode, QualityFactorScore],

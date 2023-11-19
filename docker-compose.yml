@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - postgres
     environment:
       FRONTEND_PORT: ${FRONTEND_PORT}
       BACKEND_PORT: ${BACKEND_PORT}
@@ -13,6 +15,8 @@ services:
     ports:
       - 3000:${FRONTEND_PORT}
       - 8000:${BACKEND_PORT}
+    networks:
+      - mynetwork
 
   postgres:
     image: postgres:14.9
@@ -23,6 +27,12 @@ services:
       - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
 
 volumes:
   postgres_data:
+
+networks:
+  mynetwork:
+    driver: bridge
