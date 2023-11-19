@@ -1,9 +1,11 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import craftsmenReducer from "../features/craftsmen/craftsmenSlice";
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import craftsmenReducer from '../features/craftsmen/craftsmenSlice';
+import updatePanelReducer from '../features/UpdatePanel/updatePanelSlice';
 
 export const store = configureStore({
   reducer: {
     craftsmen: craftsmenReducer,
+    updatePanel: updatePanelReducer,
   },
 });
 
