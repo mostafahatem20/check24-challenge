@@ -1,8 +1,9 @@
 interface Craftsman {
   id: number;
   name: string; // firstname + lastname
-  rankingScore: number;
+  rank: number;
   distance: number;
+  profile_score: number;
 }
 
 type SortBy = "Distance" | "Profile_Score";

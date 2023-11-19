@@ -2,14 +2,15 @@
   "home": "Home",
   "admin": "Admin",
   "card": {
-    "rating": "Rating",
+    "rating": "Profile Score",
     "chat": "Chat",
     "distance": "Distance",
-    "book": "Book"
+    "book": "Book",
+    "rank": "Rank"
   },
   "postalCode": "Postal Code",
   "tabs": {
     "shortestDistance": "Shortest Distance",
-    "highestRating": "Highest Rating"
+    "highestRating": "Highest Profile Score"
   }
 }

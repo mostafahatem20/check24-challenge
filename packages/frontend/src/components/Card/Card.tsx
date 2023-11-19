@@ -8,8 +8,9 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import en from "../../utils/en.json";
 import { Craftsman } from "@not-so-software/shared";
+import { Grid } from "@mui/material";
 
-const Card: React.FC<Craftsman> = ({ name, rankingScore, distance }) => {
+const Card: React.FC<Craftsman> = ({ name, distance, profile_score, rank }) => {
   const [randomNum] = useState(Math.floor(Math.random() * 100));
   const randomUserImageUrl = `https://randomuser.me/api/portraits/men/${randomNum}.jpg`;
 
@@ -40,9 +41,22 @@ const Card: React.FC<Craftsman> = ({ name, rankingScore, distance }) => {
           <img src={randomUserImageUrl} loading="lazy" alt="" />
         </AspectRatio>
         <CardContent>
-          <Typography fontSize="xl" fontWeight="lg">
-            {name}
-          </Typography>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Typography fontSize="xl" fontWeight="lg">
+                {name}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} md={6} container justifyContent="flex-end">
+              <div>
+                <Typography level="body-xs" fontWeight="lg">
+                  {en.card.rank}
+                </Typography>
+                <Typography fontWeight="lg">{rank.toFixed(2)}</Typography>
+              </div>
+            </Grid>
+          </Grid>{" "}
           <Sheet
             sx={{
               bgcolor: "background.level1",
@@ -58,14 +72,16 @@ const Card: React.FC<Craftsman> = ({ name, rankingScore, distance }) => {
               <Typography level="body-xs" fontWeight="lg">
                 {en.card.distance}
               </Typography>
-              <Typography fontWeight="lg">{`${distance} KM`}</Typography>
+              <Typography fontWeight="lg">{`${(distance / 1000).toFixed(
+                2
+              )} KM`}</Typography>
             </div>
 
             <div>
               <Typography level="body-xs" fontWeight="lg">
                 {en.card.rating}
               </Typography>
-              <Typography fontWeight="lg">{rankingScore}</Typography>
+              <Typography fontWeight="lg">{profile_score}</Typography>
             </div>
           </Sheet>
           <Box sx={{ display: "flex", gap: 1.5, "& > button": { flex: 1 } }}>

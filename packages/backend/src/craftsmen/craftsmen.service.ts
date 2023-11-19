@@ -20,13 +20,14 @@ export class CraftsmenService {
     const offset = (parseInt(page) - 1) * parseInt(limit);
     if (postalCode) {
       const x =
-        '(6371 * acos(cos(radians(spp.lat)) * cos(radians(pc.lat)) * cos(radians(pc.lon) - radians(spp.lon)) + sin(radians(spp.lat)) * sin(radians(pc.lat))))';
+        '(ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371)';
       const p =
         '0.4*qfs.profile_picture_score + 0.6*qfs.profile_description_score';
       const craftsmen = await this.craftsmanRepository.query(`
     SELECT 
-      spp.id as "craftsmanId",
+      spp.id as id,
       pc.postcode,
+      CONCAT(spp.first_name, ' ', spp.last_name) as name,
       ${x} AS distance,
       ${p} as profile_score,
       (CASE 
@@ -41,20 +42,25 @@ export class CraftsmenService {
       postal_code pc ON 
         CASE
           WHEN pc.postcode_extension_distance_group = 'group_b' THEN 
-            ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 <= spp.max_driving_distance + 2000
+            ${x} <= spp.max_driving_distance + 2000
           WHEN pc.postcode_extension_distance_group = 'group_c' THEN 
-            ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 <= spp.max_driving_distance + 5000
+            ${x} <= spp.max_driving_distance + 5000
           ELSE
-            ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 <= spp.max_driving_distance
+            ${x} <= spp.max_driving_distance
         END
     Where
       pc.postcode = '${postalCode}'
+    ${
+      sortBy
+        ? 'ORDER BY ' + sortBy.toLowerCase() + ' ' + sort
+        : 'ORDER BY rank DESC'
+    }
     LIMIT ${parseInt(limit)} OFFSET ${offset}
   `);
       return craftsmen;
     }
     return await this.craftsmanRepository
-      .createQueryBuilder('spp')
+      .createQueryBuilder()
       .offset(offset)
       .limit(parseInt(limit))
       .getRawMany();

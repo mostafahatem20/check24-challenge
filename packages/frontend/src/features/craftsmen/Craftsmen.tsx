@@ -1,6 +1,6 @@
 import React from "react";
 import { Virtuoso } from "react-virtuoso";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getCraftsmenByPostalCode, selectCraftsmen } from "./craftsmenSlice";
 import Card from "../../components/Card/Card";
@@ -45,27 +45,26 @@ interface ICraftsmen {
 const Craftsmen: React.FC<ICraftsmen> = ({ sort, sortBy, postalCode }) => {
   const dispatch = useAppDispatch();
   const craftsmenState = useAppSelector(selectCraftsmen);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    dispatch(
-      getCraftsmenByPostalCode({
-        page: `${page}`,
-        limit,
-        postalCode,
-        sort,
-        sortBy,
-      })
-    );
-    // eslint-disable-next-line
-  }, [page]);
   return (
     <Virtuoso
       context={{
-        loadMore: () => setPage(page + 1),
+        loadMore: () => {
+          setPage(page + 1);
+          dispatch(
+            getCraftsmenByPostalCode({
+              page: `${page + 1}`,
+              limit,
+              postalCode,
+              sort,
+              sortBy,
+            })
+          );
+        },
         loading: craftsmenState.status === "loading",
       }}
-      style={{ height: 500, backgroundColor: "#F8F8F8" }}
+      style={{ height: "100vh", backgroundColor: "#F8F8F8" }}
       data={craftsmenState.craftsmen}
       itemContent={(index, craftsman) => {
         return (

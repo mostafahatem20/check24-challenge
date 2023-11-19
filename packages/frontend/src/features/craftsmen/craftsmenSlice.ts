@@ -17,7 +17,7 @@ export const getCraftsmenByPostalCode = createAsyncThunk(
   async (body: GetCraftsmen) => {
     const response = await getCraftsmen(body);
     // The value we return becomes the `fulfilled` action payload
-    return response.data;
+    return { page: body.page, data: response.data };
   }
 );
 
@@ -33,7 +33,11 @@ export const craftsmenSlice = createSlice({
       })
       .addCase(getCraftsmenByPostalCode.fulfilled, (state, action) => {
         state.status = "idle";
-        state.craftsmen = action.payload;
+        if (action.payload.page === "1") {
+          state.craftsmen = action.payload.data;
+        } else {
+          state.craftsmen = [...state.craftsmen, ...action.payload.data];
+        }
       })
       .addCase(getCraftsmenByPostalCode.rejected, (state) => {
         state.status = "failed";
