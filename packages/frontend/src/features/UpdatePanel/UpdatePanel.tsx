@@ -39,8 +39,13 @@ const UpdatePanel = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getAllCraftsmenAsync({ page: '1', limit: '10' }));
-  }, [dispatch]);
+    dispatch(
+      getAllCraftsmenAsync({
+        page: (paginationModel.page + 1).toString(),
+        limit: paginationModel.pageSize.toString(),
+      })
+    );
+  }, [dispatch, paginationModel]);
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (
     params,
@@ -77,9 +82,10 @@ const UpdatePanel = () => {
     {
       field: 'id',
       headerName: 'ID',
-      // width: 150,
+      width: 150,
       align: 'left',
       headerAlign: 'left',
+      sortable: false,
     },
     {
       field: 'name',
@@ -87,42 +93,47 @@ const UpdatePanel = () => {
       // width: 250,
       align: 'left',
       headerAlign: 'left',
+      sortable: false,
     },
     {
       field: 'maxDrivingDistance',
       headerName: 'Max Driving Distance',
-      // width: 250,
+      width: 250,
       editable: true,
       type: 'number',
       align: 'left',
       headerAlign: 'left',
+      sortable: false,
     },
     {
       field: 'profilePictureScore',
       headerName: 'Profile Picture Score',
-      // width: 250,
+      width: 250,
       editable: true,
       type: 'number',
       align: 'left',
       headerAlign: 'left',
+      sortable: false,
     },
     {
       field: 'profileDescriptionScore',
       headerName: 'Profile Description Score',
-      // width: 250,
+      width: 250,
       editable: true,
       type: 'number',
       align: 'left',
       headerAlign: 'left',
+      sortable: false,
     },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      // width: 100,
+      width: 100,
       cellClassName: 'actions',
       align: 'left',
       headerAlign: 'left',
+      sortable: false,
       getActions: ({ id }) => {
         const idx = Number(id.valueOf());
         const isInEditMode =
@@ -177,6 +188,7 @@ const UpdatePanel = () => {
           pageSizeOptions={[10]}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
+          rowCount={10000}
         />
       </div>
     </div>

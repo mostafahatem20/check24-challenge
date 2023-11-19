@@ -1,4 +1,6 @@
 import { GridRowModel } from '@mui/x-data-grid';
+import { craftsmenAxios } from '../../utils/axios';
+import { SingleCraftsManRow } from './updatePanelSlice';
 
 // A mock function to mimic making an async request for data
 export function fetchCraftsmen(amount = 1) {
@@ -13,7 +15,9 @@ export function updateData(updatedRow: GridRowModel) {
   console.log('CALLING BACKEND TO UPDATE DATA');
   console.log(updatedRow);
 
-  return new Promise<{ data: GridRowModel }>((resolve) =>
-    setTimeout(() => resolve({ data: updatedRow }), 1500)
-  );
+  return craftsmenAxios.patch(`/${updatedRow.id}`, {
+    maxDrivingDistance: updatedRow.maxDrivingDistance,
+    profileDescriptionScore: updatedRow.profileDescriptionScore,
+    profilePictureScore: updatedRow.profilePictureScore,
+  });
 }

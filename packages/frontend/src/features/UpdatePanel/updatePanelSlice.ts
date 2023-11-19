@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { fetchCraftsmen, updateData } from './updatePanelAPI';
+import { updateData } from './updatePanelAPI';
 import { initialRows } from '../../utils/constants/initialRows';
 import {
   GridValidRowModel,
@@ -19,17 +19,30 @@ export interface UpdatePanelState {
 }
 
 export interface SingleCraftsManItem {
-  Craftsman_city: string;
-  Craftsman_first_name: string;
-  Craftsman_house_number: string;
-  Craftsman_id: number;
-  Craftsman_last_name: string;
-  Craftsman_lat: number;
-  Craftsman_lon: number;
-  Craftsman_max_driving_distance: number;
-  Craftsman_street: string;
+  score_id: number;
+  score_profile_description_score: number;
+  score_profile_id: number;
+  score_profile_picture_score: number;
+  spp_city: string;
+  spp_first_name: string;
+  spp_house_number: string;
+  spp_id: number;
+  spp_last_name: string;
+  spp_lat: number;
+  spp_lon: number;
+  spp_max_driving_distance: number;
+  spp_street: string;
   isNew: boolean;
   id: number;
+}
+
+export interface SingleCraftsManRow {
+  name: string;
+  isNew: boolean;
+  id: number;
+  maxDrivingDistance: number;
+  profilePictureScore: number;
+  profileDescriptionScore: number;
 }
 
 const initialState: UpdatePanelState = {
@@ -37,6 +50,10 @@ const initialState: UpdatePanelState = {
   rowModesModel: {},
   status: 'idle',
 };
+
+export const selectRows = (state: RootState) => state.updatePanel.rows;
+export const selectrowModesModel = (state: RootState) =>
+  state.updatePanel.rowModesModel;
 
 export const updateDataAsync = createAsyncThunk(
   'updatePanel/updateData',
@@ -50,7 +67,7 @@ export const getAllCraftsmenAsync = createAsyncThunk(
   'craftsmen/getCraftsmenByPostalCode',
   async (body: GetCraftsmen) => {
     const response = await getCraftsmen(body);
-    console.log(response.data);
+    // console.log(response.data);
 
     return { page: body.page, data: response.data };
   }
@@ -61,15 +78,27 @@ export const updatePanelSlice = createSlice({
   initialState,
   reducers: {
     // Use the PayloadAction type to declare the contents of `action.payload`
-    cancelEditMode: (state, id: PayloadAction<GridRowId>) => {
+    cancelEditMode: (state, action: PayloadAction<GridRowId>) => {
+      console.log(state.rows);
+      console.log(action.payload);
+
       state.rowModesModel = {
         ...state.rowModesModel,
-        [id.payload]: { mode: GridRowModes.View, ignoreModifications: true },
+        [action.payload]: {
+          mode: GridRowModes.View,
+          ignoreModifications: true,
+        },
       };
 
-      const editedRow = state.rows.find((row: GridRowModel) => row.id === id);
+      const editedRow = state.rows.find(
+        (row: GridRowModel) => row.id === action.payload
+      );
+      console.log(editedRow);
+
       if (editedRow!.isNew) {
-        state.rows = state.rows.filter((row: GridRowModel) => row.id !== id);
+        state.rows = state.rows.filter(
+          (row: GridRowModel) => row.id !== action.payload
+        );
       }
     },
 
@@ -98,41 +127,59 @@ export const updatePanelSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(updateDataAsync.pending, (state) => {
-        console.log('PENDING');
+        // console.log('PENDING');
         // state.status = 'loading';
       })
       .addCase(updateDataAsync.fulfilled, (state, action) => {
         console.log('SUCCESS');
-        const updatedRow = action.payload;
-        state.rows = state.rows.map((row: GridRowModel) =>
-          row.id === updatedRow.id ? updatedRow : row
-        );
+        // const updatedRow = action.payload;
+        // console.log(state.rows);
+        // state.rows = state.rows.map((row: GridRowModel) =>
+        //   row.id === updatedRow.id
+        //     ? {
+        //         isNew: false,
+        //         id: updatedRow.spp_id,
+        //         name: `${updatedRow.spp_first_name} ${updatedRow.spp_last_name}`,
+        //         maxDrivingDistance: updatedRow.spp_max_driving_distance,
+        //         profilePictureScore: updatedRow.score_profile_picture_score,
+        //         profileDescriptionScore:
+        //           updatedRow.score_profile_description_score,
+        //       }
+        //     : row
+        // );
       })
       .addCase(updateDataAsync.rejected, (state) => {
-        console.log('REJECT');
+        // console.log('REJECT');
         // state.status = 'failed';
       })
       .addCase(getAllCraftsmenAsync.pending, (state) => {
-        console.log('PENDING');
+        // console.log('PENDING');
         // state.status = 'loading';
       })
       .addCase(getAllCraftsmenAsync.fulfilled, (state, action) => {
         console.log('SUCCESS');
-        console.log(action.payload);
+        console.log(action.payload.data);
 
-        state.rows = action.payload.data.map((item: SingleCraftsManItem) => {
-          return {
-            ...item,
-            isNew: false,
-            id: item.Craftsman_id,
-            name: `${item.Craftsman_first_name} ${item.Craftsman_last_name}`,
-            maxDrivingDistance: item.Craftsman_max_driving_distance,
-            profilePictureScore: item.Cr
-          };
-        });
+        state.rows = action.payload.data.map(
+          (item: SingleCraftsManItem, idx: number) => {
+            console.log(idx);
+
+            return {
+              // ...item,
+              isNew: false,
+              id: item.spp_id,
+              // id: idx,
+              name: `${item.spp_first_name} ${item.spp_last_name}`,
+              maxDrivingDistance: item.spp_max_driving_distance,
+              profilePictureScore: item.score_profile_picture_score,
+              profileDescriptionScore: item.score_profile_description_score,
+            };
+          }
+        );
+        console.log(state.rows.length);
       })
       .addCase(getAllCraftsmenAsync.rejected, (state) => {
-        console.log('REJECT');
+        // console.log('REJECT');
         // state.status = 'failed';
       });
   },
@@ -140,9 +187,5 @@ export const updatePanelSlice = createSlice({
 
 export const { cancelEditMode, openEditMode, changeRowModesModel, saveRow } =
   updatePanelSlice.actions;
-
-export const selectRows = (state: RootState) => state.updatePanel.rows;
-export const selectrowModesModel = (state: RootState) =>
-  state.updatePanel.rowModesModel;
 
 export default updatePanelSlice.reducer;
