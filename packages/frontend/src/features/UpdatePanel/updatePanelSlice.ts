@@ -16,6 +16,7 @@ export interface UpdatePanelState {
   rows: readonly GridValidRowModel[];
   rowModesModel: GridRowModesModel;
   status: 'idle' | 'loading' | 'failed';
+  rowsCount: number;
 }
 
 export interface SingleCraftsManItem {
@@ -23,17 +24,22 @@ export interface SingleCraftsManItem {
   score_profile_description_score: number;
   score_profile_id: number;
   score_profile_picture_score: number;
-  spp_city: string;
-  spp_first_name: string;
-  spp_house_number: string;
-  spp_id: number;
-  spp_last_name: string;
-  spp_lat: number;
-  spp_lon: number;
-  spp_max_driving_distance: number;
-  spp_street: string;
-  isNew: boolean;
+  city: string;
+  first_name: string;
+  house_number: string;
   id: number;
+  last_name: string;
+  lat: number;
+  lon: number;
+  max_driving_distance: number;
+  street: string;
+  isNew: boolean;
+  score: {
+    id: number;
+    profile_description_score: number;
+    profile_picture_score: number;
+    profile_id: number;
+  };
 }
 
 export interface SingleCraftsManRow {
@@ -48,12 +54,15 @@ export interface SingleCraftsManRow {
 const initialState: UpdatePanelState = {
   rows: initialRows,
   rowModesModel: {},
+  rowsCount: 0,
   status: 'idle',
 };
 
 export const selectRows = (state: RootState) => state.updatePanel.rows;
 export const selectrowModesModel = (state: RootState) =>
   state.updatePanel.rowModesModel;
+export const selectRowsCount = (state: RootState) =>
+  state.updatePanel.rowsCount;
 
 export const updateDataAsync = createAsyncThunk(
   'updatePanel/updateData',
@@ -64,10 +73,9 @@ export const updateDataAsync = createAsyncThunk(
 );
 
 export const getAllCraftsmenAsync = createAsyncThunk(
-  'craftsmen/getCraftsmenByPostalCode',
+  'updatePanel/getAllCraftsmenAsync',
   async (body: GetCraftsmen) => {
     const response = await getCraftsmen(body);
-    // console.log(response.data);
 
     return { page: body.page, data: response.data };
   }
@@ -138,9 +146,9 @@ export const updatePanelSlice = createSlice({
         //   row.id === updatedRow.id
         //     ? {
         //         isNew: false,
-        //         id: updatedRow.spp_id,
-        //         name: `${updatedRow.spp_first_name} ${updatedRow.spp_last_name}`,
-        //         maxDrivingDistance: updatedRow.spp_max_driving_distance,
+        //         id: updatedRow.id,
+        //         name: `${updatedRow.first_name} ${updatedRow.last_name}`,
+        //         maxDrivingDistance: updatedRow.max_driving_distance,
         //         profilePictureScore: updatedRow.score_profile_picture_score,
         //         profileDescriptionScore:
         //           updatedRow.score_profile_description_score,
@@ -158,25 +166,20 @@ export const updatePanelSlice = createSlice({
       })
       .addCase(getAllCraftsmenAsync.fulfilled, (state, action) => {
         console.log('SUCCESS');
-        console.log(action.payload.data);
-
-        state.rows = action.payload.data.map(
+        state.rowsCount = action.payload.data.totalCraftsmenCount;
+        state.rows = action.payload.data.craftsmen.map(
           (item: SingleCraftsManItem, idx: number) => {
             console.log(idx);
-
             return {
-              // ...item,
               isNew: false,
-              id: item.spp_id,
-              // id: idx,
-              name: `${item.spp_first_name} ${item.spp_last_name}`,
-              maxDrivingDistance: item.spp_max_driving_distance,
-              profilePictureScore: item.score_profile_picture_score,
-              profileDescriptionScore: item.score_profile_description_score,
+              id: item.id,
+              name: `${item.first_name} ${item.last_name}`,
+              maxDrivingDistance: item.max_driving_distance,
+              profilePictureScore: item.score.profile_picture_score,
+              profileDescriptionScore: item.score.profile_description_score,
             };
           }
         );
-        console.log(state.rows.length);
       })
       .addCase(getAllCraftsmenAsync.rejected, (state) => {
         // console.log('REJECT');

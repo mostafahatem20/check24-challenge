@@ -23,6 +23,7 @@ import {
   openEditMode,
   saveRow,
   selectRows,
+  selectRowsCount,
   selectrowModesModel,
   updateDataAsync,
 } from './updatePanelSlice';
@@ -35,7 +36,7 @@ const UpdatePanel = () => {
 
   const rowsState = useAppSelector(selectRows);
   const rowsModelsModeState = useAppSelector(selectrowModesModel);
-
+  const rowsCount = useAppSelector(selectRowsCount);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -90,7 +91,7 @@ const UpdatePanel = () => {
     {
       field: 'name',
       headerName: 'Name',
-      // width: 250,
+      width: 250,
       align: 'left',
       headerAlign: 'left',
       sortable: false,
@@ -188,7 +189,7 @@ const UpdatePanel = () => {
           pageSizeOptions={[10]}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          rowCount={10000}
+          rowCount={rowsCount}
         />
       </div>
     </div>

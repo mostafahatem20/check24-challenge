@@ -1,6 +1,5 @@
 import { GridRowModel } from '@mui/x-data-grid';
 import { craftsmenAxios } from '../../utils/axios';
-import { SingleCraftsManRow } from './updatePanelSlice';
 
 // A mock function to mimic making an async request for data
 export function fetchCraftsmen(amount = 1) {
