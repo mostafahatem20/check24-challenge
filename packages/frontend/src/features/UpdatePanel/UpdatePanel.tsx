@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import {
   DataGrid,
   GridColDef,
@@ -18,6 +19,7 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
   cancelEditMode,
   changeRowModesModel,
+  getAllCraftsmenAsync,
   openEditMode,
   saveRow,
   selectRows,
@@ -26,10 +28,19 @@ import {
 } from './updatePanelSlice';
 
 const UpdatePanel = () => {
+  const [paginationModel, setPaginationModel] = React.useState({
+    pageSize: 10,
+    page: 0,
+  });
+
   const rowsState = useAppSelector(selectRows);
   const rowsModelsModeState = useAppSelector(selectrowModesModel);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getAllCraftsmenAsync({ page: '1', limit: '10' }));
+  }, [dispatch]);
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (
     params,
@@ -163,6 +174,9 @@ const UpdatePanel = () => {
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          pageSizeOptions={[10]}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
         />
       </div>
     </div>

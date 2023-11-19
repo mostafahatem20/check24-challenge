@@ -9,11 +9,27 @@ import {
   GridRowModesModel,
   GridRowModel,
 } from '@mui/x-data-grid';
+import { GetCraftsmen } from '@not-so-software/shared';
+import { getCraftsmen } from '../craftsmen/craftsmenAPI';
 
 export interface UpdatePanelState {
   rows: readonly GridValidRowModel[];
   rowModesModel: GridRowModesModel;
   status: 'idle' | 'loading' | 'failed';
+}
+
+export interface SingleCraftsManItem {
+  Craftsman_city: string;
+  Craftsman_first_name: string;
+  Craftsman_house_number: string;
+  Craftsman_id: number;
+  Craftsman_last_name: string;
+  Craftsman_lat: number;
+  Craftsman_lon: number;
+  Craftsman_max_driving_distance: number;
+  Craftsman_street: string;
+  isNew: boolean;
+  id: number;
 }
 
 const initialState: UpdatePanelState = {
@@ -27,6 +43,16 @@ export const updateDataAsync = createAsyncThunk(
   async (updatedRow: GridValidRowModel) => {
     const response = await updateData(updatedRow);
     return response.data;
+  }
+);
+
+export const getAllCraftsmenAsync = createAsyncThunk(
+  'craftsmen/getCraftsmenByPostalCode',
+  async (body: GetCraftsmen) => {
+    const response = await getCraftsmen(body);
+    console.log(response.data);
+
+    return { page: body.page, data: response.data };
   }
 );
 
@@ -83,6 +109,29 @@ export const updatePanelSlice = createSlice({
         );
       })
       .addCase(updateDataAsync.rejected, (state) => {
+        console.log('REJECT');
+        // state.status = 'failed';
+      })
+      .addCase(getAllCraftsmenAsync.pending, (state) => {
+        console.log('PENDING');
+        // state.status = 'loading';
+      })
+      .addCase(getAllCraftsmenAsync.fulfilled, (state, action) => {
+        console.log('SUCCESS');
+        console.log(action.payload);
+
+        state.rows = action.payload.data.map((item: SingleCraftsManItem) => {
+          return {
+            ...item,
+            isNew: false,
+            id: item.Craftsman_id,
+            name: `${item.Craftsman_first_name} ${item.Craftsman_last_name}`,
+            maxDrivingDistance: item.Craftsman_max_driving_distance,
+            profilePictureScore: item.Cr
+          };
+        });
+      })
+      .addCase(getAllCraftsmenAsync.rejected, (state) => {
         console.log('REJECT');
         // state.status = 'failed';
       });
