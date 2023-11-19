@@ -50,7 +50,7 @@ const Craftsmen: React.FC<ICraftsmen> = ({ sort, sortBy, postalCode }) => {
   useEffect(() => {
     dispatch(
       getCraftsmenByPostalCode({
-        page,
+        page: `${page}`,
         limit,
         postalCode,
         sort,

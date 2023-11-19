@@ -34,7 +34,7 @@ const Home = () => {
             onClick={() => {
               dispatch(
                 getCraftsmenByPostalCode({
-                  page: 0,
+                  page: "0",
                   limit,
                   postalCode,
                   sort,

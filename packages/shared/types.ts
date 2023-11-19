@@ -8,8 +8,8 @@ interface Craftsman {
 type SortBy = "Distance" | "Profile_Score";
 type Sort = "ASC" | "DESC";
 interface GetCraftsmen {
-  page: number;
-  limit: number;
+  page: string;
+  limit: string;
   postalCode?: string;
   sortBy?: SortBy;
   sort?: Sort;

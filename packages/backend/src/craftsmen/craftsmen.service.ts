@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Craftsman } from './entities/craftsman.entity';
-import { GetCraftsmen, PatchRequest } from '@not-so-software/shared';
+import { PatchRequest } from '@not-so-software/shared';
 import { QualityFactorScore } from 'src/quality-factor-scores/entities/quality-factor-score.entity';
-import { CraftsmanPostal } from 'src/craftsmen-postals/entities/craftsman-postal.entity';
+import { GetCraftsmen } from '@not-so-software/shared';
 
 @Injectable()
 export class CraftsmenService {
@@ -14,75 +14,50 @@ export class CraftsmenService {
 
     @InjectRepository(QualityFactorScore)
     private readonly qualityScoreRepository: Repository<QualityFactorScore>,
-
-    @InjectRepository(CraftsmanPostal)
-    private readonly craftsmanPostalRepository: Repository<CraftsmanPostal>,
   ) {}
 
-  async findAll({ page, limit, postalCode, sortBy, sort }: GetCraftsmen) {
-    const queryBuilder = this.craftsmanRepository.createQueryBuilder('c');
-    let joinQuery = queryBuilder
-      .leftJoin('c.postals', 'p')
-      .addSelect('p.distance')
-      .addSelect('p.profile_score');
-
+  async findAll({ postalCode, page, limit, sort, sortBy }: GetCraftsmen) {
+    const offset = (parseInt(page) - 1) * parseInt(limit);
     if (postalCode) {
-      joinQuery = joinQuery.where('p.postcode = :code', {
-        code: postalCode,
-      });
+      const x =
+        '(6371 * acos(cos(radians(spp.lat)) * cos(radians(pc.lat)) * cos(radians(pc.lon) - radians(spp.lon)) + sin(radians(spp.lat)) * sin(radians(pc.lat))))';
+      const p =
+        '0.4*qfs.profile_picture_score + 0.6*qfs.profile_description_score';
+      const craftsmen = await this.craftsmanRepository.query(`
+    SELECT 
+      spp.id as "craftsmanId",
+      pc.postcode,
+      ${x} AS distance,
+      ${p} as profile_score,
+      (CASE 
+        WHEN ${x} > 80 THEN 0.01 * (1 - (${x} / 80)) + (1 - 0.01) * (${p})
+        ELSE 0.15 * (1 - (${x} / 80)) + (1 - 0.15) * (${p})
+      END) AS rank
+    FROM
+      craftsman spp
+    INNER JOIN
+      quality_factor_score qfs ON spp.id = qfs.profile_id
+    INNER JOIN
+      postal_code pc ON 
+        CASE
+          WHEN pc.postcode_extension_distance_group = 'group_b' THEN 
+            ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 <= spp.max_driving_distance + 2000
+          WHEN pc.postcode_extension_distance_group = 'group_c' THEN 
+            ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 <= spp.max_driving_distance + 5000
+          ELSE
+            ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 <= spp.max_driving_distance
+        END
+    Where
+      pc.postcode = '${postalCode}'
+    LIMIT ${parseInt(limit)} OFFSET ${offset}
+  `);
+      return craftsmen;
     }
-
-    if (sortBy && sort) {
-      const sortParam =
-        sortBy === 'Distance' ? 'p.distance' : 'p.profile_score';
-      joinQuery = joinQuery.orderBy(sortParam, sort);
-    }
-
-    const result = await joinQuery
-      .skip(page * limit)
-      .take(limit)
-      .getMany();
-    return result;
-  }
-
-  async updateCraftsmanPostal(
-    craftsman: Craftsman,
-    {
-      profileDescriptionScore,
-      profilePictureScore,
-      maxDrivingDistance,
-    }: PatchRequest,
-  ) {
-    if (maxDrivingDistance) {
-      if (maxDrivingDistance > craftsman.max_driving_distance) {
-      } else if (maxDrivingDistance > craftsman.max_driving_distance) {
-      }
-    }
-
-    if (profileDescriptionScore || profilePictureScore) {
-      const defaultDistance = 80;
-      const craftsmenPostalToUpdate = await this.craftsmanPostalRepository.find(
-        { where: { craftsman: { id: craftsman.id } } },
-      );
-
-      const updatedRecords = craftsmenPostalToUpdate.map((craftsmanPostal) => {
-        const distanceScore = 1 - craftsmanPostal.distance / defaultDistance;
-        const distanceWeight =
-          craftsmanPostal.distance > defaultDistance ? 0.01 : 0.15;
-
-        const profileScore =
-          0.4 * profilePictureScore + 0.6 * profileDescriptionScore;
-        const rank =
-          distanceWeight * distanceScore + (1 - distanceWeight) * profileScore;
-
-        craftsmanPostal.profile_score = profileScore;
-        craftsmanPostal.rank = rank;
-
-        return craftsmanPostal;
-      });
-
-      await this.craftsmanPostalRepository.save(updatedRecords);
-    }
+    return await this.craftsmanRepository
+      .createQueryBuilder('spp')
+      .offset(offset)
+      .limit(parseInt(limit))
+      .getRawMany();
   }
 
   async update(
@@ -106,16 +81,6 @@ export class CraftsmenService {
     if (!craftsman.score) {
       throw new Error(`Quality score not found for Craftsman with ID ${id}`);
     }
-
-    // update new table but don't wait for it
-    this.updateCraftsmanPostal(
-      { ...craftsman },
-      {
-        maxDrivingDistance,
-        profileDescriptionScore,
-        profilePictureScore,
-      },
-    );
 
     // Update craftsman's max driving distance if given
     if (maxDrivingDistance) {

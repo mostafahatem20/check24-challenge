@@ -18,6 +18,9 @@ export class QualityFactorScore {
   @Column({ type: 'double precision' })
   profile_description_score: number;
 
+  @Column()
+  profile_id: number;
+
   @OneToOne(() => Craftsman, (craftsman) => craftsman.score)
   @JoinColumn({ name: 'profile_id' })
   craftsman: Craftsman;

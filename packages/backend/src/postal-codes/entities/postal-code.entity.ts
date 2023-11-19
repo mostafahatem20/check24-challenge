@@ -4,12 +4,9 @@ import {
   PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
-  JoinColumn,
 } from 'typeorm';
 import { PostcodeExtensionGroup } from '@not-so-software/shared';
 import * as moment from 'moment';
-import { CraftsmanPostal } from 'src/craftsmen-postals/entities/craftsman-postal.entity';
 
 @Entity()
 export class PostalCode {
@@ -24,10 +21,6 @@ export class PostalCode {
 
   @Column({ type: 'enum', enum: PostcodeExtensionGroup })
   postcode_extension_distance_group: string;
-
-  @OneToOne(() => CraftsmanPostal, (postal) => postal.postcode)
-  @JoinColumn()
-  craftsmen_postals: CraftsmanPostal;
 
   @CreateDateColumn({
     type: 'timestamp',

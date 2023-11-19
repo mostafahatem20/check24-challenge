@@ -1,18 +1,18 @@
-import { Controller, Get, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Query } from '@nestjs/common';
 import { CraftsmenService } from './craftsmen.service';
-import { GetCraftsmen, PatchRequest } from '@not-so-software/shared';
-
+import { PatchRequest } from '@not-so-software/shared';
+import { GetCraftsmen } from '@not-so-software/shared';
 @Controller('craftsmen')
 export class CraftsmenController {
-    constructor(private readonly craftsmenService: CraftsmenService) {}
+  constructor(private readonly craftsmenService: CraftsmenService) {}
 
-    @Get()
-    findAll(@Body() payload: GetCraftsmen) {
-        return this.craftsmenService.findAll(payload);
-    }
+  @Get()
+  findAll(@Query() queryParams: GetCraftsmen) {
+    return this.craftsmenService.findAll(queryParams);
+  }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateCraftsmanDto: PatchRequest) {
-        return this.craftsmenService.update(+id, updateCraftsmanDto);
-    }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateCraftsmanDto: PatchRequest) {
+    return this.craftsmenService.update(+id, updateCraftsmanDto);
+  }
 }
