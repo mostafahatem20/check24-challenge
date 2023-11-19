@@ -88,7 +88,7 @@ const Card: React.FC<Craftsman> = ({ name, distance, profile_score, rank }) => {
             <Button variant="outlined" color="neutral">
               {en.card.chat}
             </Button>
-            <Button variant="solid" color="primary">
+            <Button variant="solid" style={{ backgroundColor: "#063773" }}>
               {en.card.book}
             </Button>
           </Box>

@@ -59,12 +59,16 @@ export class CraftsmenService {
   `);
       return craftsmen;
     }
-    return await this.craftsmanRepository
+    const [craftsmen, totalCraftsmenCount] = await this.craftsmanRepository
       .createQueryBuilder('spp')
       .leftJoinAndSelect('spp.score', 'score')
       .offset(offset)
       .limit(parseInt(limit))
-      .getRawMany();
+      .getManyAndCount();
+    return {
+      craftsmen,
+      totalCraftsmenCount,
+    };
   }
 
   async update(

@@ -48,64 +48,71 @@ const Home = () => {
         </Grid>
         <Grid item xs={12} md={6} container justifyContent="flex-end">
           <Button
+            variant={index === 0 ? "contained" : "outlined"}
             color={index === 0 ? "primary" : "secondary"}
+            style={{ margin: "0px 5px" }}
             onClick={() => {
               if (index !== 0) {
                 setIndex(0);
                 setSort("ASC");
                 setSortBy("Distance");
-                dispatch(
-                  getCraftsmenByPostalCode({
-                    page: "1",
-                    limit,
-                    postalCode,
-                    sort: "ASC",
-                    sortBy: "Distance",
-                  })
-                );
+                if (postalCode)
+                  dispatch(
+                    getCraftsmenByPostalCode({
+                      page: "1",
+                      limit,
+                      postalCode,
+                      sort: "ASC",
+                      sortBy: "Distance",
+                    })
+                  );
               } else {
                 setIndex(-1);
                 setSort(undefined);
                 setSortBy(undefined);
-                dispatch(
-                  getCraftsmenByPostalCode({
-                    page: "1",
-                    limit,
-                    postalCode,
-                  })
-                );
+                if (postalCode)
+                  dispatch(
+                    getCraftsmenByPostalCode({
+                      page: "1",
+                      limit,
+                      postalCode,
+                    })
+                  );
               }
             }}
           >
             {en.tabs.shortestDistance}
           </Button>
           <Button
+            variant={index === 1 ? "contained" : "outlined"}
             color={index === 1 ? "primary" : "secondary"}
             onClick={() => {
               if (index !== 1) {
                 setIndex(1);
                 setSort("DESC");
                 setSortBy("Profile_Score");
-                dispatch(
-                  getCraftsmenByPostalCode({
-                    page: "1",
-                    limit,
-                    postalCode,
-                    sort: "DESC",
-                    sortBy: "Profile_Score",
-                  })
-                );
+                if (postalCode)
+                  dispatch(
+                    getCraftsmenByPostalCode({
+                      page: "1",
+                      limit,
+                      postalCode,
+                      sort: "DESC",
+                      sortBy: "Profile_Score",
+                    })
+                  );
               } else {
                 setIndex(-1);
                 setSort(undefined);
                 setSortBy(undefined);
-                dispatch(
-                  getCraftsmenByPostalCode({
-                    page: "1",
-                    limit,
-                    postalCode,
-                  })
-                );
+                if (postalCode)
+                  dispatch(
+                    getCraftsmenByPostalCode({
+                      page: "1",
+                      limit,
+                      postalCode,
+                    })
+                  );
               }
             }}
           >
