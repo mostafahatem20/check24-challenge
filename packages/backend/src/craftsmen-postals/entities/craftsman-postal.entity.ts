@@ -16,5 +16,8 @@ export class CraftsmanPostal {
   rank: number;
 
   @Column({ type: 'double precision' })
+  profile_score: number;
+
+  @Column({ type: 'double precision' })
   distance: number;
 }

@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Craftsman } from 'src/craftsmen/entities/craftsman.entity';
 import { PostalCode } from 'src/postal-codes/entities/postal-code.entity';
 import { QualityFactorScore } from 'src/quality-factor-scores/entities/quality-factor-score.entity';
 import * as postcodeData from './seeds/postcode.json';
 import * as qualityFactorScoreData from './seeds/quality_factor_score.json';
 import * as serviceProviderProfileData from './seeds/service_provider_profile.json';
+import { CraftsmanPostal } from 'src/craftsmen-postals/entities/craftsman-postal.entity';
 @Injectable()
 export class DataService {
   constructor(
@@ -16,6 +17,8 @@ export class DataService {
     private readonly postalCodeRepository: Repository<PostalCode>,
     @InjectRepository(QualityFactorScore)
     private readonly qualityFactorScoreRepository: Repository<QualityFactorScore>,
+    @InjectRepository(CraftsmanPostal)
+    private readonly craftsmanPostalRepository: Repository<CraftsmanPostal>,
   ) {}
 
   async onModuleInit() {
@@ -70,47 +73,38 @@ export class DataService {
         .values(entry)
         .execute();
     });
+
+    this.createCraftsmanPostalTable();
   }
-  // async createCraftsmanPostalTable(): Promise<void> {
-  //   const queryRunner = connection.createQueryRunner();
-  
-  //   await queryRunner.startTransaction();
-  
-  //   try {
-  //     const subQuery = connection.createQueryBuilder()
-  //       .select([
-  //         'spp.id',
-  //         'pc.postal_code',
-  //         'spp.first_name',
-  //         'spp.last_name',
-  //         'qfs.profile_picture_score',
-  //         'qfs.profile_description_score',
-  //         `ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 as distance`,
-  //       ])
-  //       .from('service_provider_profile', 'spp')
-  //       .innerJoin('quality_factor_score', 'qfs', 'spp.id = qfs.profile_id')
-  //       .innerJoin('postal_code', 'pc', `ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 < CASE WHEN pc.postcode_extension_distance_group = 'group_b' THEN max_driving_distance + 2 WHEN pc.postcode_extension_distance_group = 'group_c' THEN max_driving_distance + 5 ELSE max_driving_distance END`);
-  
-  //     const mainQuery = connection.createQueryBuilder()
-  //       .insert()
-  //       .into('craftsman_postal')
-  //       .addSelect('id')
-  //       .addSelect('postal_code')
-  //       .addSelect('first_name')
-  //       .addSelect('last_name')
-  //       .addSelect('profile_picture_score')
-  //       .addSelect('profile_description_score')
-  //       .addSelect('distance')
-  //       .fromQuery(subQuery, 'craftsman_postal');
-  
-  //     await queryRunner.query(mainQuery.getSql());
-  
-  //     await queryRunner.commitTransaction();
-  //   } catch (err) {
-  //     await queryRunner.rollbackTransaction();
-  //     throw err;
-  //   } finally {
-  //     await queryRunner.release();
-  //   }
-  // }
+  async createCraftsmanPostalTable() {
+    const subQuery = await this.craftsmanRepository
+      .createQueryBuilder()
+      .select([
+        'spp.id',
+        'pc.postcode',
+        'qfs.profile_picture_score',
+        'qfs.profile_description_score',
+        `ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 as distance`,
+      ])
+      .from('craftsman', 'spp')
+      .innerJoin('quality_factor_score', 'qfs', 'spp.id = qfs.profile_id')
+      .innerJoin(
+        'postal_code',
+        'pc',
+        `ACOS(SIN(spp.lat) * SIN(pc.lat) + COS(spp.lat) * COS(pc.lat) * COS(spp.lon - pc.lon)) * 6371 < CASE WHEN pc.postcode_extension_distance_group = 'group_b' THEN max_driving_distance + 2 WHEN pc.postcode_extension_distance_group = 'group_c' THEN max_driving_distance + 5 ELSE max_driving_distance END`,
+      )
+      .getRawMany();
+    console.log(subQuery);
+    // await this.craftsmanPostalRepository
+    //   .createQueryBuilder()
+    //   .insert()
+    //   .addSelect('id')
+    //   .addSelect('postal_code')
+    //   .addSelect('first_name')
+    //   .addSelect('last_name')
+    //   .addSelect('profile_picture_score')
+    //   .addSelect('profile_description_score')
+    //   .addSelect('distance')
+    //   .fromQuery(subQuery, 'craftsman_postal');
+  }
 }
